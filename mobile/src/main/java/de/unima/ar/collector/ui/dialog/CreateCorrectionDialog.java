@@ -20,7 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import de.unima.ar.collector.MainActivity;
+import de.unima.ar.collector.SensorDataCollectorMainActivity;
 import de.unima.ar.collector.R;
 import de.unima.ar.collector.controller.ActivityController;
 import de.unima.ar.collector.controller.SQLDBController;
@@ -83,7 +83,7 @@ public class CreateCorrectionDialog extends DialogFragment
         {
             public void onClick(DialogInterface dialog, int id)
             {
-                MainActivity main = (MainActivity) ActivityController.getInstance().get("MainActivity");
+                SensorDataCollectorMainActivity main = (SensorDataCollectorMainActivity) ActivityController.getInstance().get("SensorDataCollectorMainActivity");
                 SimpleDateFormat timeDateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.ENGLISH);
 
                 try {

@@ -274,7 +274,6 @@ public class MainActivity extends Activity
                 return true;
             }
         });
-
         // query current values
         String query = "SELECT T2.name FROM " + SQLTableName.POSTUREDATA + " as T1 JOIN " + SQLTableName.POSTURES + " as T2 ON T1.pid = T2.id WHERE T1.endtime = 0";
         BroadcastService.getInstance().sendMessage("/database/request/currentPosture", query);

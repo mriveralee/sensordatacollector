@@ -51,7 +51,7 @@ public class SensorDataCollectorService extends Service
     public static SensorDataCollectorService getInstance()
     {
         if(INSTANCE == null) {
-            new SensorDataCollectorService();
+            INSTANCE = new SensorDataCollectorService();
         }
 
         return INSTANCE;

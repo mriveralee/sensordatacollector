@@ -5,7 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import de.unima.ar.collector.MainActivity;
+import de.unima.ar.collector.SensorDataCollectorMainActivity;
 import de.unima.ar.collector.controller.ActivityController;
 
 public class UIUtils
@@ -26,7 +26,7 @@ public class UIUtils
     {
         String[] data = new String[values.length];
 
-        MainActivity main = (MainActivity) ActivityController.getInstance().get("MainActivity");
+        SensorDataCollectorMainActivity main = (SensorDataCollectorMainActivity) ActivityController.getInstance().get("SensorDataCollectorMainActivity");
         if(main == null) {
             return new String[0];
         }

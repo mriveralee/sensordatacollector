@@ -15,7 +15,7 @@ import com.google.common.collect.HashBiMap;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.unima.ar.collector.MainActivity;
+import de.unima.ar.collector.SensorDataCollectorMainActivity;
 import de.unima.ar.collector.R;
 import de.unima.ar.collector.api.ListenerService;
 import de.unima.ar.collector.util.UIUtils;
@@ -89,7 +89,7 @@ public class BluetoothController extends BroadcastReceiver
                     ListenerService.addDevice(deviceID, deviceAddress);
                     this.connectedDevices.put(deviceAddress, 1);
 
-                    MainActivity main = (MainActivity) ActivityController.getInstance().get("MainActivity");
+                    SensorDataCollectorMainActivity main = (SensorDataCollectorMainActivity) ActivityController.getInstance().get("SensorDataCollectorMainActivity");
                     main.refreshMainScreenOverview();
                     UIUtils.makeToast(main, R.string.app_toast_bluetooth_reestablished, Toast.LENGTH_SHORT);
                 } else {
@@ -104,7 +104,7 @@ public class BluetoothController extends BroadcastReceiver
                     this.connectedDevices.put(deviceAddress, -1);   // lost
                     this.lostDevices.put(deviceID, deviceAddress);  // store deviceID
 
-                    MainActivity main = (MainActivity) ActivityController.getInstance().get("MainActivity");
+                    SensorDataCollectorMainActivity main = (SensorDataCollectorMainActivity) ActivityController.getInstance().get("SensorDataCollectorMainActivity");
                     main.refreshMainScreenOverview();
                     UIUtils.makeToast(main, R.string.app_toast_bluetooth, Toast.LENGTH_SHORT);
                 } else {

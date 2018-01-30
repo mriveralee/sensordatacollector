@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import de.unima.ar.collector.MainActivity;
+import de.unima.ar.collector.SensorDataCollectorMainActivity;
 import de.unima.ar.collector.R;
 import de.unima.ar.collector.SensorDataCollectorService;
 import de.unima.ar.collector.controller.ActivityController;
@@ -82,9 +82,9 @@ class Tasks
         });
 
         // main activity started?
-        MainActivity activity = (MainActivity) ActivityController.getInstance().get("MainActivity");
+        SensorDataCollectorMainActivity activity = (SensorDataCollectorMainActivity) ActivityController.getInstance().get("SensorDataCollectorMainActivity");
         if(activity == null) {
-            Intent intent = new Intent(wls, MainActivity.class);
+            Intent intent = new Intent(wls, SensorDataCollectorMainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             wls.startActivity(intent);
@@ -113,7 +113,7 @@ class Tasks
         ListenerService.rmDevice(deviceID);
 
         // refresh overview
-        MainActivity activity = (MainActivity) ActivityController.getInstance().get("MainActivity");
+        SensorDataCollectorMainActivity activity = (SensorDataCollectorMainActivity) ActivityController.getInstance().get("SensorDataCollectorMainActivity");
         if(activity != null) {
             activity.refreshMainScreenOverview();
 
@@ -135,7 +135,7 @@ class Tasks
         }
 
         // update UI
-        MainActivity mc = (MainActivity) ActivityController.getInstance().get("MainActivity");
+        SensorDataCollectorMainActivity mc = (SensorDataCollectorMainActivity) ActivityController.getInstance().get("SensorDataCollectorMainActivity");
         if(mc != null) {
             mc.refreshActivityScreenPosture(posture);
         }
@@ -154,7 +154,7 @@ class Tasks
         }
 
         // update UI
-        MainActivity mc = (MainActivity) ActivityController.getInstance().get("MainActivity");
+        SensorDataCollectorMainActivity mc = (SensorDataCollectorMainActivity) ActivityController.getInstance().get("SensorDataCollectorMainActivity");
         if(mc != null) {
             mc.refreshActivityScreenPosition(position);
         }
@@ -192,7 +192,7 @@ class Tasks
         SQLDBController.getInstance().insert(SQLTableName.ACTIVITYDATA, null, newValues);
 
         // update UI
-        MainActivity mc = (MainActivity) ActivityController.getInstance().get("MainActivity");
+        SensorDataCollectorMainActivity mc = (SensorDataCollectorMainActivity) ActivityController.getInstance().get("SensorDataCollectorMainActivity");
         if(mc != null) {
             mc.refreshActivityScreenActivity(data, true);
         }
@@ -228,7 +228,7 @@ class Tasks
         SQLDBController.getInstance().update(SQLTableName.ACTIVITYDATA, args, "activityid = ? AND (subactivityid = ? OR subactivityid is NULL) AND endtime = 0", new String[]{ activityId, subActivityID });
 
         // update UI
-        MainActivity mc = (MainActivity) ActivityController.getInstance().get("MainActivity");
+        SensorDataCollectorMainActivity mc = (SensorDataCollectorMainActivity) ActivityController.getInstance().get("SensorDataCollectorMainActivity");
         if(mc != null) {
             mc.refreshActivityScreenActivity(data, false);
         }
@@ -264,7 +264,7 @@ class Tasks
             e.printStackTrace();
 
             // Check if UI is available
-            Context context = ActivityController.getInstance().get("MainActivity");
+            Context context = ActivityController.getInstance().get("SensorDataCollectorMainActivity");
             if(context != null) {
                 Utils.makeToast2(context, R.string.listener_database_failed, Toast.LENGTH_LONG);
             }

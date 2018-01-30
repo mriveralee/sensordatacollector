@@ -24,7 +24,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 
-import de.unima.ar.collector.MainActivity;
+import de.unima.ar.collector.SensorDataCollectorMainActivity;
 import de.unima.ar.collector.R;
 import de.unima.ar.collector.SensorDataCollectorService;
 import de.unima.ar.collector.controller.SQLDBController;
@@ -121,7 +121,7 @@ public class SensorenRowAdapter extends ArrayAdapter<String>
                 @Override
                 public void onClick(View v)
                 {
-                    if(!(context instanceof MainActivity)) {       // TODO why?
+                    if(!(context instanceof SensorDataCollectorMainActivity)) {       // TODO why?
                         return;
                     }
 
@@ -141,7 +141,7 @@ public class SensorenRowAdapter extends ArrayAdapter<String>
                             return;
                         }
 
-                        MainActivity ma = (MainActivity) context;
+                        SensorDataCollectorMainActivity ma = (SensorDataCollectorMainActivity) context;
                         ma.showSensorSelftest(s);
                     } catch(Exception e) {
                         Toast.makeText(context, context.getString(R.string.sensor_selftest_notify2), Toast.LENGTH_LONG).show();

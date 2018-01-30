@@ -67,12 +67,14 @@ public class OverviewRowAdapter extends ArrayAdapter<String>
         }
 
         ViewHolder holder = (ViewHolder) rowView.getTag();
+        // TODO make sure we don't use SCM unless it is not null
         SensorCollectorManager scm = SensorDataCollectorService.getInstance().getSCM();
 
         if(position == 0) {
             holder.text.setText(context.getString(R.string.main_overview_sensors));
             holder.text2.setText(context.getString(R.string.main_overview_sensors_description));
-            holder.text3.setText(String.valueOf(scm.getRunningSensorAmount()));
+            int sensorCount = (scm != null) ? scm.getRunningSensorAmount() : 0;
+            holder.text3.setText(String.valueOf(sensorCount));
         } else if(position == 1) {
             String[] names = SensorDataUtil.getNamesOfEnabledSensors(1);
             String extDesc = "";
@@ -84,7 +86,9 @@ public class OverviewRowAdapter extends ArrayAdapter<String>
 
             holder.text.setText(context.getString(R.string.main_overview_power));
             holder.text2.setText(context.getString(R.string.main_overview_power_description) + extDesc);
-            holder.text3.setText(scm.getPowerUsed() + " mA");
+            float powerUsed = (scm != null) ? scm.getPowerUsed() : 0.0f;
+
+            holder.text3.setText(powerUsed + " mA");
         } else if(position == 2) {
             holder.text.setText(context.getString(R.string.main_overview_database));
             holder.text2.setText(context.getString(R.string.main_overview_database_description));

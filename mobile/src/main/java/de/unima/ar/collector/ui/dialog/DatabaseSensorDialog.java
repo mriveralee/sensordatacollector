@@ -19,7 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import de.unima.ar.collector.MainActivity;
+import de.unima.ar.collector.SensorDataCollectorMainActivity;
 import de.unima.ar.collector.R;
 import de.unima.ar.collector.ui.DatePickerListener;
 import de.unima.ar.collector.ui.TimePickerListener;
@@ -32,11 +32,11 @@ import de.unima.ar.collector.util.PlotConfiguration;
 @SuppressLint("InflateParams")
 public class DatabaseSensorDialog extends DialogFragment
 {
-    private MainActivity      context;
+    private SensorDataCollectorMainActivity context;
     private PlotConfiguration pc;
 
 
-    public void setContext(MainActivity context)
+    public void setContext(SensorDataCollectorMainActivity context)
     {
         this.context = context;
     }

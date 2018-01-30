@@ -84,7 +84,7 @@ import de.unima.ar.collector.ui.DrawPointsMap;
 import de.unima.ar.collector.ui.OverviewRowAdapter;
 import de.unima.ar.collector.ui.SensorenRowAdapter;
 import de.unima.ar.collector.ui.SeparatedListAdapter;
-import de.unima.ar.collector.ui.SettingActivity;
+import de.unima.ar.collector.ui.SensorDataCollectorSettingActivity;
 import de.unima.ar.collector.ui.dialog.CreateCorrectionDialog;
 import de.unima.ar.collector.ui.dialog.DatabaseSensorDialog;
 import de.unima.ar.collector.ui.dialog.GPSDatabaseDialog;
@@ -96,7 +96,7 @@ import de.unima.ar.collector.util.SensorDataUtil;
 import de.unima.ar.collector.util.StringUtils;
 import de.unima.ar.collector.util.Triple;
 
-public class MainActivity extends AppCompatActivity
+public class SensorDataCollectorMainActivity extends AppCompatActivity
 {
     private enum Screens
     {
@@ -121,8 +121,11 @@ public class MainActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
 
+        // start and inform
+        startService(new Intent(SensorDataCollectorMainActivity.this, SensorDataCollectorService.class));
+
         // set default values
-        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+        PreferenceManager.setDefaultValues(this, R.xml.sensor_preferences, false);
 
         // restore settings
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
@@ -144,10 +147,10 @@ public class MainActivity extends AppCompatActivity
         }
 
         // register
-        ActivityController.getInstance().add("MainActivity", this);
+        ActivityController.getInstance().add("SensorDataCollectorMainActivity", this);
 
-        // start and inform
-        startService(new Intent(MainActivity.this, SensorDataCollectorService.class));
+//        // start and inform
+//        startService(new Intent(SensorDataCollectorMainActivity.this, SensorDataCollectorService.class));
 
         // start wearable app
         BroadcastService.initInstance(this);
@@ -155,12 +158,12 @@ public class MainActivity extends AppCompatActivity
         BroadcastService.getInstance().sendMessage("/activity/start", "");
 
         // start handheld app
-        showSensoren();
+        showSensoren(true);
 
         // style
         if(getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowHomeEnabled(true);
-            getSupportActionBar().setIcon(R.drawable.ic_launcher);
+            //getSupportActionBar().setIcon(R.drawable.ic_launcher);
         }
 
         // request all permissions
@@ -234,7 +237,9 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onBackPressed()
     {
-        if(lastScreens.size() <= 1) {
+        // Was <= 1
+        if(lastScreens.size() <= 3) {
+            finish();
             return;
         }
 
@@ -256,7 +261,7 @@ public class MainActivity extends AppCompatActivity
 
         switch(si.screen) {
             case SENSOREN:
-                showSensoren();
+                showSensoren(false);
                 return;
             case SENSOREN_DETAILS:
                 showSensorenDetail();
@@ -286,7 +291,7 @@ public class MainActivity extends AppCompatActivity
                 showActivityCorrection();
                 return;
             default:
-                showSensoren();
+                showSensoren(false);
         }
     }
 
@@ -297,7 +302,7 @@ public class MainActivity extends AppCompatActivity
     public void showAnalyzeDatabase()
     {
         addScreen(Screens.ANALYZE_DATABASE);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_mobile_main);
 
         Set<PlotConfiguration> configurations = new HashSet<>();
         Collection<SensorCollector> sCollectors = SensorDataCollectorService.getInstance().getSCM().getSensorCollectors().values();
@@ -369,16 +374,16 @@ public class MainActivity extends AppCompatActivity
 
                 if(sensorName.equals("GPS")) {
                     if(GPSView == null) {
-                        GPSView = MainActivity.this.getLayoutInflater().inflate(R.layout.googlemaplayout, null);
+                        GPSView = SensorDataCollectorMainActivity.this.getLayoutInflater().inflate(R.layout.googlemaplayout, null);
                     }
 
                     GPSDatabaseDialog dialog = new GPSDatabaseDialog();
-                    dialog.setContext(MainActivity.this);
+                    dialog.setContext(SensorDataCollectorMainActivity.this);
 
                     dialog.show(getSupportFragmentManager(), "GPSDatabaseDialog");
                 } else if(showConfigs.containsKey(sensorName + deviceID)) {
                     DatabaseSensorDialog dialog = new DatabaseSensorDialog();
-                    dialog.setContext(MainActivity.this);
+                    dialog.setContext(SensorDataCollectorMainActivity.this);
                     dialog.setPlotConfig(showConfigs.get(sensorName + deviceID));
                     dialog.show(getSupportFragmentManager(), "DatabaseSensorDialogFragment");
                 }
@@ -436,7 +441,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void run()
             {
-                MainActivity main = (MainActivity) ActivityController.getInstance().get("MainActivity");
+                SensorDataCollectorMainActivity main = (SensorDataCollectorMainActivity) ActivityController.getInstance().get("SensorDataCollectorMainActivity");
 
                 // Main Plot
                 XYPlot mainPlot = (XYPlot) findViewById(R.id.DatabasePlot);
@@ -710,7 +715,7 @@ public class MainActivity extends AppCompatActivity
     {
         addScreen(Screens.ACTIVITIES);
 
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_mobile_main);
 
         SeparatedListAdapter sadapter = new SeparatedListAdapter(this, 0);
 
@@ -802,9 +807,9 @@ public class MainActivity extends AppCompatActivity
                     CreateCorrectionDialog cc = new CreateCorrectionDialog();
                     cc.show(getSupportFragmentManager(), "CreateCorrectionDialog");
                 } else if(position > 2) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                    builder.setTitle(MainActivity.this.getString(R.string.activity_correction_dialog_delete_title));
-                    builder.setMessage(MainActivity.this.getString(R.string.activity_correction_dialog_delete_message));
+                    AlertDialog.Builder builder = new AlertDialog.Builder(SensorDataCollectorMainActivity.this);
+                    builder.setTitle(SensorDataCollectorMainActivity.this.getString(R.string.activity_correction_dialog_delete_title));
+                    builder.setMessage(SensorDataCollectorMainActivity.this.getString(R.string.activity_correction_dialog_delete_message));
 
                     CorrectionHistoryAdapter chAdapter = (CorrectionHistoryAdapter) AdapterController.getInstance().get("ActivityCorrectionHistory");
                     int pos = (chAdapter.getCount() - 1) - (position - 3);  // TODO Workaround "-3"
@@ -822,7 +827,7 @@ public class MainActivity extends AppCompatActivity
                         public void onClick(DialogInterface dialog, int id)
                         {
                             SQLDBController.getInstance().delete(SQLTableName.ACTIVITYCORRECTION, "id=?", new String[]{ entryID });
-                            MainActivity.this.refreshActivityCorrectionHistoryScreen();
+                            SensorDataCollectorMainActivity.this.refreshActivityCorrectionHistoryScreen();
                         }
                     });
 
@@ -875,7 +880,7 @@ public class MainActivity extends AppCompatActivity
     {
         // init
         addScreen(Screens.ANALYZE);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_mobile_main);
 
         // create adapter
         SeparatedListAdapter sadapter = new SeparatedListAdapter(this, 0);
@@ -1019,7 +1024,7 @@ public class MainActivity extends AppCompatActivity
 
     public void showOptions()
     {
-        Intent i = new Intent(this, SettingActivity.class);
+        Intent i = new Intent(this, SensorDataCollectorSettingActivity.class);
         startActivityForResult(i, 1000);
     }
 
@@ -1028,7 +1033,7 @@ public class MainActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         if(requestCode == 1000) {        // workaround -just want to be sure that the main screen is shown if the preference activity stopped
-            showSensoren();
+            showSensoren(false);
         }
     }
 
@@ -1036,10 +1041,12 @@ public class MainActivity extends AppCompatActivity
     /**
      * Mainscreen
      */
-    public void showSensoren()
+    public void showSensoren(boolean shouldAddScreen)
     {
-        addScreen(Screens.SENSOREN);
-        setContentView(R.layout.activity_main);
+        if (shouldAddScreen) {
+            addScreen(Screens.SENSOREN);
+        }
+        setContentView(R.layout.activity_mobile_main);
 
         // Fülle Liste
         List<String> valueList = new ArrayList<>();
@@ -1086,7 +1093,7 @@ public class MainActivity extends AppCompatActivity
     public void showAdditionalDevices()
     {
         addScreen(Screens.ADDITIONAL_DEVICES);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_mobile_main);
 
         SeparatedListAdapter sadapter = new SeparatedListAdapter(this, 0);
 
@@ -1108,7 +1115,7 @@ public class MainActivity extends AppCompatActivity
     public void showSensorenDetail()
     {
         addScreen(Screens.SENSOREN_DETAILS);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_mobile_main);
 
         SeparatedListAdapter sadapter = new SeparatedListAdapter(this, 0);
 
@@ -1332,7 +1339,7 @@ public class MainActivity extends AppCompatActivity
 
     private Notification createBasicNotification()
     {
-        Intent notificationIntent = new Intent(this, MainActivity.class);
+        Intent notificationIntent = new Intent(this, SensorDataCollectorMainActivity.class);
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent intent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
 
@@ -1384,7 +1391,7 @@ public class MainActivity extends AppCompatActivity
             return true;
         } else if(item.getItemId() == R.id.action_sensoren) {
             if(getCurrentScreen().screen != Screens.SENSOREN) {
-                showSensoren();
+                showSensoren(true);
             }
             return true;
         } else if(item.getItemId() == R.id.action_options) {
@@ -1507,7 +1514,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         // stop service
-        stopService(new Intent(MainActivity.this, SensorDataCollectorService.class));
+        stopService(new Intent(SensorDataCollectorMainActivity.this, SensorDataCollectorService.class));
         BluetoothController.getInstance().unregister(this);
 
         // hide notifications

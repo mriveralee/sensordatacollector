@@ -17,7 +17,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import de.unima.ar.collector.MainActivity;
+import de.unima.ar.collector.SensorDataCollectorMainActivity;
 import de.unima.ar.collector.R;
 import de.unima.ar.collector.SensorDataCollectorService;
 import de.unima.ar.collector.database.DatabaseHelper;
@@ -33,10 +33,10 @@ import de.unima.ar.collector.ui.TimePickerListener;
 @SuppressLint("SimpleDateFormat")
 public class GPSDatabaseDialog extends DialogFragment
 {
-    private MainActivity context;
+    private SensorDataCollectorMainActivity context;
 
 
-    public void setContext(MainActivity context)
+    public void setContext(SensorDataCollectorMainActivity context)
     {
         this.context = context;
     }

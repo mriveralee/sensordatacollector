@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import de.unima.ar.collector.MainActivity;
+import de.unima.ar.collector.SensorDataCollectorMainActivity;
 import de.unima.ar.collector.R;
 import de.unima.ar.collector.controller.ActivityController;
 import de.unima.ar.collector.controller.SQLDBController;
@@ -161,7 +161,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
         String names = Arrays.toString(columns).replace("[", "").replace("]", "").trim();
         List<String[]> result = SQLDBController.getInstance().query("SELECT attr_time, " + names + " FROM " + tableName + " WHERE attr_time > ? AND attr_time < ?", new String[]{ String.valueOf(start), String.valueOf(end) }, false);
 
-        MainActivity main = (MainActivity) ActivityController.getInstance().get("MainActivity");
+        SensorDataCollectorMainActivity main = (SensorDataCollectorMainActivity) ActivityController.getInstance().get("SensorDataCollectorMainActivity");
         main.refreshGraphBuilderProgressBar(R.string.analyze_analyzelive_loading3, 15);
 
         tmp.put("attr_time", new Double[result.size()]);

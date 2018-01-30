@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import de.unima.ar.collector.MainActivity;
+import de.unima.ar.collector.SensorDataCollectorMainActivity;
 import de.unima.ar.collector.R;
 import de.unima.ar.collector.controller.ActivityController;
 import de.unima.ar.collector.database.DatabaseHelper;
@@ -76,7 +76,7 @@ public class DataPlotZoomListener implements View.OnTouchListener
     {
         series = new SimpleXYSeries[pc.domainValueNames.length];
 
-        MainActivity main = (MainActivity) ActivityController.getInstance().get("MainActivity");
+        SensorDataCollectorMainActivity main = (SensorDataCollectorMainActivity) ActivityController.getInstance().get("SensorDataCollectorMainActivity");
         main.refreshGraphBuilderProgressBar(R.string.analyze_analyzelive_loading2, 5);
 
         String tableName = SQLTableName.PREFIX + pc.deviceID + pc.tableName;

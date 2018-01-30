@@ -23,7 +23,7 @@ import de.unima.ar.collector.shared.Settings;
 import de.unima.ar.collector.ui.dialog.DatabaseDeleteDialog;
 import de.unima.ar.collector.ui.dialog.DatabaseExportCSVDialog;
 
-public class SettingActivity extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener
+public class SensorDataCollectorSettingActivity extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener
 {
 
     @Override
@@ -128,12 +128,13 @@ public class SettingActivity extends PreferenceActivity implements SharedPrefere
         {
             super.onCreate(savedInstanceState);
 
-            // Load the preferences from an XML resource
-            addPreferencesFromResource(R.xml.preferences);
+            // Load the sensor_preferences from an XML resource
+            addPreferencesFromResource(R.xml.sensor_preferences);
 
             // register listener
             CheckBoxPreference watchDirectBox = (CheckBoxPreference) findPreference("watch_direct");
-            watchDirectBox.setOnPreferenceChangeListener(this);
+            if (watchDirectBox != null) {
+                watchDirectBox.setOnPreferenceChangeListener(this);}
         }
 
 
